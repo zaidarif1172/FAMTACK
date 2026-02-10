@@ -1,0 +1,24 @@
+{
+    "name": "famtalk",
+    "version": "1.0.0",
+    "description": "A modern real-time chat application with voice and video calling",
+    "author": "Your Name",
+    "license": "MIT",
+    "scripts": {
+        "setup": "cd server && npm install && npx prisma db push && cd ../client && npm install",
+        "dev": "concurrently \"cd server && npm run dev\" \"cd client && npm run dev\"",
+        "build": "cd client && npm run build"
+    },
+    "keywords": [
+        "chat",
+        "real-time",
+        "webrtc",
+        "socket.io",
+        "react",
+        "nodejs"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "your-repo-url"
+    }
+}

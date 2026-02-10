@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  username  String   @unique
+  password  String
+  avatarUrl String?
+  isOnline  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  
+  sentMessages     Message[] @relation("SentMessages")
+  receivedMessages Message[] @relation("ReceivedMessages")
+  groupMembers     GroupMember[]
+  contacts         Contact[] @relation("UserContacts")
+  contactOf        Contact[] @relation("ContactOf")
+  statuses         Status[]
+}
+
+model Message {
+  id         Int      @id @default(autoincrement())
+  content    String
+  senderId   Int
+  receiverId Int?
+  groupId    Int?
+  isRead     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  sender   User   @relation("SentMessages", fields: [senderId], references: [id])
+  receiver User?  @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  group    Group? @relation(fields: [groupId], references: [id])
+}
+
+model Group {
+  id        Int      @id @default(autoincrement())
+  name      String
+  avatarUrl String?
+  createdAt DateTime @default(now())
+  
+  messages  Message[]
+  members   GroupMember[]
+}
+
+model GroupMember {
+  id      Int     @id @default(autoincrement())
+  userId  Int
+  groupId Int
+  isAdmin Boolean @default(false)
+  
+  user    User    @relation(fields: [userId], references: [id])
+  group   Group   @relation(fields: [groupId], references: [id])
+
+  @@unique([userId, groupId])
+}
+
+model Contact {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  contactId Int
+  createdAt DateTime @default(now())
+  
+  user    User @relation("UserContacts", fields: [userId], references: [id])
+  contact User @relation("ContactOf", fields: [contactId], references: [id])
+  
+  @@unique([userId, contactId])
+}
+
+model Status {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  content   String?
+  imageUrl  String?
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+}
