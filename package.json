@@ -7,7 +7,8 @@
     "scripts": {
         "setup": "cd server && npm install && npx prisma db push && cd ../client && npm install",
         "dev": "concurrently \"cd server && npm run dev\" \"cd client && npm run dev\"",
-        "build": "cd client && npm run build"
+        "build": "cd client && npm install && npm run build",
+        "postinstall": "npm install --prefix server && npm install --prefix client"
     },
     "keywords": [
         "chat",
@@ -20,5 +21,8 @@
     "repository": {
         "type": "git",
         "url": "your-repo-url"
+    },
+    "devDependencies": {
+        "concurrently": "^8.2.2"
     }
 }
