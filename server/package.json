@@ -8,7 +8,7 @@
     "dev": "nodemon index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Mr. Zaid Arif",
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^6.3.1",

@@ -2,7 +2,7 @@
     "name": "famtalk",
     "version": "1.0.0",
     "description": "A modern real-time chat application with voice and video calling",
-    "author": "Your Name",
+    "author": "Mr. Zaid Arif",
     "license": "MIT",
     "scripts": {
         "setup": "cd server && npm install && npx prisma db push && cd ../client && npm install",
