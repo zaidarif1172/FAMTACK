@@ -102,11 +102,11 @@ const Chat = () => {
                 <div className="p-4 bg-slate-900/50 backdrop-blur-md border-b border-slate-800 flex justify-between items-center h-20">
                     <div className="flex items-center gap-3">
                         <div className="relative">
-                            <img src={user?.avatarUrl} alt="Me" className="w-11 h-11 rounded-full bg-slate-800 object-cover ring-2 ring-brand-500/20" />
+                            <img src={user?.user_metadata?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.id}`} alt="Me" className="w-11 h-11 rounded-full bg-slate-800 object-cover ring-2 ring-brand-500/20" />
                             <span className="absolute bottom-0 right-0 w-3 h-3 bg-brand-500 rounded-full border-2 border-slate-900"></span>
                         </div>
                         <div>
-                            <span className="font-bold text-lg truncate max-w-[120px] block">{user?.fullName || user?.username}</span>
+                            <span className="font-bold text-lg truncate max-w-[120px] block">{user?.user_metadata?.full_name || 'User'}</span>
                             <span className="text-xs text-brand-400 font-medium">Online</span>
                         </div>
                     </div>
@@ -196,11 +196,11 @@ const Chat = () => {
                             className={`w-full p-3 flex items-center gap-4 rounded-xl transition-all duration-200 group ${selectedUser?.id === u.id ? 'bg-brand-500/10 border border-brand-500/20' : 'hover:bg-slate-800/50 border border-transparent'}`}
                         >
                             <div className="relative">
-                                <img src={u.avatarUrl} alt={u.fullName || u.username} className="w-12 h-12 rounded-full bg-slate-800 object-cover" />
-                                {u.isOnline && <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-brand-500 rounded-full border-2 border-slate-900 group-hover:border-slate-800 transition-colors"></span>}
+                                <img src={u.avatar_url} alt={u.full_name} className="w-12 h-12 rounded-full bg-slate-800 object-cover" />
+                                {onlineUsers.has(u.id) && <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-brand-500 rounded-full border-2 border-slate-900 group-hover:border-slate-800 transition-colors"></span>}
                             </div>
                             <div className="text-left flex-1 min-w-0">
-                                <h3 className={`font-semibold text-[15px] truncate ${selectedUser?.id === u.id ? 'text-brand-300' : 'text-slate-200 group-hover:text-white'}`}>{u.fullName || u.username}</h3>
+                                <h3 className={`font-semibold text-[15px] truncate ${selectedUser?.id === u.id ? 'text-brand-300' : 'text-slate-200 group-hover:text-white'}`}>{u.full_name}</h3>
                                 {typingUsers.has(u.id) ? (
                                     <p className="text-xs text-brand-400 font-medium truncate animate-pulse">Typing...</p>
                                 ) : (
@@ -221,14 +221,14 @@ const Chat = () => {
                                 <button onClick={() => setShowSidebar(true)} className="md:hidden p-2 -ml-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800">
                                     <Menu />
                                 </button>
-                                <img src={selectedUser.avatarUrl} alt={selectedUser.fullName || selectedUser.username} className="w-11 h-11 rounded-full bg-slate-800 object-cover ring-2 ring-slate-700" />
+                                <img src={selectedUser.avatar_url} alt={selectedUser.full_name} className="w-11 h-11 rounded-full bg-slate-800 object-cover ring-2 ring-slate-700" />
                                 <div>
-                                    <h3 className="font-bold text-lg">{selectedUser.fullName || selectedUser.username}</h3>
+                                    <h3 className="font-bold text-lg">{selectedUser.full_name}</h3>
                                     <p className="text-xs font-medium">
                                         {typingUsers.has(selectedUser.id) ? (
                                             <span className="text-brand-400 animate-pulse">Typing...</span>
                                         ) : (
-                                            selectedUser.isOnline ? <span className="text-brand-500">Online</span> : <span className="text-slate-500">Offline</span>
+                                            onlineUsers.has(selectedUser.id) ? <span className="text-brand-500">Online</span> : <span className="text-slate-500">Offline</span>
                                         )}
                                     </p>
                                 </div>
@@ -254,7 +254,7 @@ const Chat = () => {
                                 </div>
 
                                 {messages.map((msg, idx) => {
-                                    const isMe = msg.senderId === user.id;
+                                    const isMe = msg.sender_id === user.id;
                                     return (
                                         <div key={idx} className={`flex ${isMe ? 'justify-end' : 'justify-start'} animate-fade-in group`}>
                                             <div className={`max-w-[80%] md:max-w-[65%] px-5 py-3 rounded-2xl text-[15px] shadow-sm relative ${isMe
@@ -263,10 +263,10 @@ const Chat = () => {
                                                 }`}>
                                                 <p className="leading-relaxed">{msg.content}</p>
                                                 <div className={`text-[10px] opacity-70 flex justify-end items-center gap-1.5 mt-1.5 font-medium`}>
-                                                    <span>{format(new Date(msg.createdAt), 'HH:mm')}</span>
+                                                    <span>{format(new Date(msg.created_at), 'HH:mm')}</span>
                                                     {isMe && (
-                                                        <span className={msg.isRead ? "text-brand-200" : ""}>
-                                                            {msg.isRead ? <CheckCheck size={14} /> : <Check size={14} />}
+                                                        <span className={msg.is_read ? "text-brand-200" : ""}>
+                                                            {msg.is_read ? <CheckCheck size={14} /> : <Check size={14} />}
                                                         </span>
                                                     )}
                                                 </div>
