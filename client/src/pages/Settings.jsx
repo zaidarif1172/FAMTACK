@@ -4,13 +4,13 @@ import { X, Camera, User, Mail, Lock, LogOut, Save } from 'lucide-react';
 
 const Settings = ({ onClose }) => {
     const { user, logout, updateProfile } = useChatStore();
-    const [username, setUsername] = useState(user?.username || '');
+    const [fullName, setFullName] = useState(user?.fullName || '');
     const [avatarUrl, setAvatarUrl] = useState(user?.avatarUrl || '');
     const [saving, setSaving] = useState(false);
 
     const handleSave = async () => {
         setSaving(true);
-        await updateProfile({ username, avatarUrl });
+        await updateProfile({ fullName, avatarUrl });
         setSaving(false);
         alert('Profile updated successfully!');
     };
@@ -96,17 +96,17 @@ const Settings = ({ onClose }) => {
                             </div>
                         </div>
 
-                        {/* Username */}
+                        {/* Full Name */}
                         <div className="mb-4">
                             <label className="block text-xs font-medium text-slate-400 mb-2 ml-1 uppercase tracking-wider">
-                                Username
+                                Full Name
                             </label>
                             <input
                                 type="text"
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
+                                value={fullName}
+                                onChange={(e) => setFullName(e.target.value)}
                                 className="w-full px-4 py-3 glass-input rounded-xl text-white outline-none"
-                                placeholder="Your username"
+                                placeholder="Your full name"
                             />
                         </div>
 

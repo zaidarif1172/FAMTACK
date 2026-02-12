@@ -9,25 +9,29 @@ const prisma = new PrismaClient();
 // Register
 router.post('/register', async (req, res) => {
     try {
-        const { email, password, username } = req.body;
+        const { email, password, fullName } = req.body;
 
         // Check existing
         const existing = await prisma.user.findFirst({
-            where: { OR: [{ email }, { username }] }
+            where: { email }
         });
 
         if (existing) {
-            return res.status(400).json({ error: 'Email or Username already taken' });
+            return res.status(400).json({ error: 'Email already taken' });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
+        // Generate username from email prefix (as a fallback/internal unique ID)
+        const username = email.split('@')[0] + Math.floor(Math.random() * 1000);
+
         // Avatar boilerplate (e.g., dicebear)
-        const avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${username}`;
+        const avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${fullName}`;
 
         const user = await prisma.user.create({
             data: {
                 email,
+                fullName,
                 username,
                 password: hashedPassword,
                 avatarUrl
@@ -35,7 +39,7 @@ router.post('/register', async (req, res) => {
         });
 
         const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET);
-        res.status(201).json({ token, user: { id: user.id, username: user.username, email: user.email, avatarUrl: user.avatarUrl } });
+        res.status(201).json({ token, user: { id: user.id, fullName: user.fullName, email: user.email, avatarUrl: user.avatarUrl } });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Server error' });
@@ -58,7 +62,7 @@ router.post('/login', async (req, res) => {
         }
 
         const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET);
-        res.json({ token, user: { id: user.id, username: user.username, email: user.email, avatarUrl: user.avatarUrl } });
+        res.json({ token, user: { id: user.id, fullName: user.fullName, username: user.username, email: user.email, avatarUrl: user.avatarUrl } });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Server error' });
@@ -75,7 +79,7 @@ router.get('/me', async (req, res) => {
         const user = await prisma.user.findUnique({ where: { id: decoded.userId } });
         if (!user) return res.status(401).json({ error: 'User not found' });
 
-        res.json({ user: { id: user.id, username: user.username, email: user.email, avatarUrl: user.avatarUrl } });
+        res.json({ user: { id: user.id, fullName: user.fullName, username: user.username, email: user.email, avatarUrl: user.avatarUrl } });
     } catch (err) {
         res.status(401).json({ error: 'Invalid token' });
     }

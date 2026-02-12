@@ -20,6 +20,7 @@ router.get('/', async (req, res) => {
             },
             select: {
                 id: true,
+                fullName: true,
                 username: true,
                 email: true,
                 avatarUrl: true,

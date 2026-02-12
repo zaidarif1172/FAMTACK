@@ -39,9 +39,9 @@ export const useChatStore = create((set, get) => ({
         }
     },
 
-    register: async (username, email, password) => {
+    register: async (fullName, email, password) => {
         try {
-            const res = await axios.post(`${API_URL}/auth/register`, { username, email, password });
+            const res = await axios.post(`${API_URL}/auth/register`, { fullName, email, password });
             set({ user: res.data.user, token: res.data.token });
             localStorage.setItem('token', res.data.token);
             get().connectSocket(res.data.user.id);

@@ -106,7 +106,7 @@ const Chat = () => {
                             <span className="absolute bottom-0 right-0 w-3 h-3 bg-brand-500 rounded-full border-2 border-slate-900"></span>
                         </div>
                         <div>
-                            <span className="font-bold text-lg truncate max-w-[120px] block">{user?.username}</span>
+                            <span className="font-bold text-lg truncate max-w-[120px] block">{user?.fullName || user?.username}</span>
                             <span className="text-xs text-brand-400 font-medium">Online</span>
                         </div>
                     </div>
@@ -196,11 +196,11 @@ const Chat = () => {
                             className={`w-full p-3 flex items-center gap-4 rounded-xl transition-all duration-200 group ${selectedUser?.id === u.id ? 'bg-brand-500/10 border border-brand-500/20' : 'hover:bg-slate-800/50 border border-transparent'}`}
                         >
                             <div className="relative">
-                                <img src={u.avatarUrl} alt={u.username} className="w-12 h-12 rounded-full bg-slate-800 object-cover" />
+                                <img src={u.avatarUrl} alt={u.fullName || u.username} className="w-12 h-12 rounded-full bg-slate-800 object-cover" />
                                 {u.isOnline && <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-brand-500 rounded-full border-2 border-slate-900 group-hover:border-slate-800 transition-colors"></span>}
                             </div>
                             <div className="text-left flex-1 min-w-0">
-                                <h3 className={`font-semibold text-[15px] truncate ${selectedUser?.id === u.id ? 'text-brand-300' : 'text-slate-200 group-hover:text-white'}`}>{u.username}</h3>
+                                <h3 className={`font-semibold text-[15px] truncate ${selectedUser?.id === u.id ? 'text-brand-300' : 'text-slate-200 group-hover:text-white'}`}>{u.fullName || u.username}</h3>
                                 {typingUsers.has(u.id) ? (
                                     <p className="text-xs text-brand-400 font-medium truncate animate-pulse">Typing...</p>
                                 ) : (
@@ -221,9 +221,9 @@ const Chat = () => {
                                 <button onClick={() => setShowSidebar(true)} className="md:hidden p-2 -ml-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800">
                                     <Menu />
                                 </button>
-                                <img src={selectedUser.avatarUrl} alt={selectedUser.username} className="w-11 h-11 rounded-full bg-slate-800 object-cover ring-2 ring-slate-700" />
+                                <img src={selectedUser.avatarUrl} alt={selectedUser.fullName || selectedUser.username} className="w-11 h-11 rounded-full bg-slate-800 object-cover ring-2 ring-slate-700" />
                                 <div>
-                                    <h3 className="font-bold text-lg">{selectedUser.username}</h3>
+                                    <h3 className="font-bold text-lg">{selectedUser.fullName || selectedUser.username}</h3>
                                     <p className="text-xs font-medium">
                                         {typingUsers.has(selectedUser.id) ? (
                                             <span className="text-brand-400 animate-pulse">Typing...</span>
@@ -323,10 +323,10 @@ const Chat = () => {
                         <div className="mb-6">
                             <img
                                 src={incomingCall.caller?.avatarUrl}
-                                alt={incomingCall.caller?.username}
+                                alt={incomingCall.caller?.fullName || incomingCall.caller?.username}
                                 className="w-24 h-24 rounded-full mx-auto mb-4 ring-4 ring-brand-500/50"
                             />
-                            <h3 className="text-2xl font-bold mb-2">{incomingCall.caller?.username}</h3>
+                            <h3 className="text-2xl font-bold mb-2">{incomingCall.caller?.fullName || incomingCall.caller?.username}</h3>
                             <p className="text-slate-400">
                                 Incoming {incomingCall.callType === 'video' ? 'Video' : 'Voice'} Call
                             </p>

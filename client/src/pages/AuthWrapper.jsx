@@ -6,7 +6,7 @@ const AuthWrapper = () => {
     const [isLogin, setIsLogin] = useState(true);
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
-        username: '',
+        fullName: '',
         email: '',
         password: ''
     });
@@ -19,7 +19,7 @@ const AuthWrapper = () => {
         if (isLogin) {
             res = await login(formData.email, formData.password);
         } else {
-            res = await register(formData.username, formData.email, formData.password);
+            res = await register(formData.fullName, formData.email, formData.password);
         }
         setLoading(false);
 
@@ -53,13 +53,13 @@ const AuthWrapper = () => {
                 <form onSubmit={handleSubmit} className="space-y-5">
                     {!isLogin && (
                         <div className="animate-fade-in">
-                            <label className="block text-xs font-medium text-slate-400 mb-1 ml-1 uppercase tracking-wider">Username</label>
+                            <label className="block text-xs font-medium text-slate-400 mb-1 ml-1 uppercase tracking-wider">Full Name</label>
                             <input
                                 type="text"
                                 className="w-full px-4 py-3 glass-input rounded-xl text-white outline-none"
-                                placeholder="johndoe"
-                                value={formData.username}
-                                onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                                placeholder="John Doe"
+                                value={formData.fullName}
+                                onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                                 required
                             />
                         </div>

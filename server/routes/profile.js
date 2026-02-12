@@ -8,25 +8,11 @@ const prisma = new PrismaClient();
 // Update profile
 router.put('/profile', authMiddleware, async (req, res) => {
     try {
-        const { username, avatarUrl } = req.body;
+        const { fullName, avatarUrl } = req.body;
         const userId = req.userId;
 
-        // Check if username is taken (if changing)
-        if (username) {
-            const existing = await prisma.user.findFirst({
-                where: {
-                    username,
-                    NOT: { id: userId }
-                }
-            });
-
-            if (existing) {
-                return res.status(400).json({ error: 'Username already taken' });
-            }
-        }
-
         const updateData = {};
-        if (username) updateData.username = username;
+        if (fullName) updateData.fullName = fullName;
         if (avatarUrl) updateData.avatarUrl = avatarUrl;
 
         const user = await prisma.user.update({
@@ -37,6 +23,7 @@ router.put('/profile', authMiddleware, async (req, res) => {
         res.json({
             user: {
                 id: user.id,
+                fullName: user.fullName,
                 username: user.username,
                 email: user.email,
                 avatarUrl: user.avatarUrl
